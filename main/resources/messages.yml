@@ -1,0 +1,79 @@
+# =====================================================================
+# SkyBanker Messages Configuration
+# =====================================================================
+# Every message the plugin sends to players is defined here and can
+# be freely edited without recompiling the plugin. Just save the file
+# and use /skybanker reload message.yml (or restart) to apply changes.
+#
+# Formatting: use '&' for color codes (e.g. &a = green, &c = red).
+# Multi-line messages: use \n inside the string to start a new line.
+#
+# Placeholders available (only where noted per message):
+#   %amount%   - a coin amount involved in the action
+#   %balance%  - the player's resulting bank balance
+#   %account%  - the player's new account tier name
+#   %limit%    - the player's new bank balance limit
+# =====================================================================
+
+# Shown before every message below. Kept short so it doesn't crowd chat.
+prefix: "&8[&6SkyBanker&8] "
+
+# =====================================================================
+# Deposit / Withdraw feedback
+# =====================================================================
+
+# Shown when a deposit or upgrade fails because the player's purse
+# balance is too low. %amount% = the purse balance they actually have.
+not-enough-coins: "&cYou don't have enough coins! You only have &6$%amount%&c."
+
+# Shown when a deposit would exceed the player's bank tier limit.
+# %amount% = the remaining space actually available in their bank.
+bank-full: "&cYour bank is full! You only have space for &6$%amount%&c."
+
+# Shown when the amount typed on the sign couldn't be parsed at all
+# (e.g. random text, or a format the parser doesn't recognize).
+invalid-amount: "&cInvalid amount!"
+
+# Shown when the player left the sign's first line blank and hit Done.
+no-amount-entered: "&cNo amount entered."
+
+# Shown after a successful deposit.
+# %amount% = coins just deposited, %balance% = new bank total.
+deposit-success: "&aYou have deposited &6$%amount% &acoins! You now have &6$%balance% &acoins in your account!"
+
+# Shown after a successful withdrawal.
+# %amount% = coins just withdrawn, %balance% = new bank total.
+withdraw-success: "&aYou have withdrawn &6$%amount% &acoins! You now have &6$%balance% &acoins in your account!"
+
+# =====================================================================
+# Settings menu
+# =====================================================================
+
+# Shown when a player tries to open the Settings menu while the admin
+# has turned it off (gui.settings-menu.enabled: false in config.yml).
+settings-disabled: "&cThe settings menu is disabled on this server."
+
+# =====================================================================
+# Account Upgrades
+# =====================================================================
+
+# Shown when a player tries to "upgrade" into a tier they already own
+# or a lower tier than their current one.
+already-unlocked: "&cYou already unlocked this tier!"
+
+# Shown when a player tries to skip a tier (e.g. going from Starter
+# straight to Deluxe without buying Gold first).
+need-previous-upgrade: "&cNeed previous upgrade!"
+
+# Shown on a successful upgrade purchase.
+# level-up banner using strikethrough (&m) spaces as a divider line.
+# %account% = the new tier's display name, %limit% = new balance cap.
+upgrade-success: "&6&m                                        &r\n&a&lBANK UPGRADE COMPLETE!\n&7You upgraded to %account%&7.\n&7New balance limit: &6$%limit%\n&6&m                                        &r"
+
+# =====================================================================
+# Interest
+# =====================================================================
+
+# Sent automatically to a player when their scheduled bank interest
+# is paid out. %amount% = interest earned, %balance% = new bank total.
+interest-received: "&6[Bank] &aYou received &e$%amount% &ainterest! New balance: &6$%balance%"

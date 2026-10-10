@@ -1,0 +1,26 @@
+name: Sky_Banker
+version: '${version}'
+main: me.skoohy.skybanker.SkyBanker
+api-version: '1.21.11'
+depend: [Vault]
+softdepend: [PlaceholderAPI]
+commands:
+  bank:
+    description: Opens the SkyBlock Bank menu
+    permission: bank.use
+    usage: /bank
+  skybanker:
+    description: SkyBanker leaderboard, rank, placeholders, and admin commands
+    permission: bank.use
+    usage: /skybanker <top|user|placeholder|help|reload>
+  sb:
+    description: Shortcut for /skybanker (leaderboard, rank, placeholders, admin)
+    permission: bank.use
+    usage: /sb <top|user|placeholder|help|reload>
+permissions:
+  bank.use:
+    description: Allows use of /bank, /skybanker, and /sb (top/user/placeholder/help)
+    default: true
+  skybanker.admin:
+    description: Allows use of the /skybanker (or /sb) reload subcommand
+    default: op
