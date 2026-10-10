@@ -126,14 +126,19 @@ Reload either file in-game without restarting:
 
 ---
 
-## 🛠️ Building from Source
+## 🔍 Checking the Code
+
+The source code is public so you can see that the plugin is safe. You are welcome to read it and to build it on your own computer to check that the release jar matches the code:
 
 ```bash
 git clone https://github.com/yourusername/Sky-Banker.git
 cd Sky-Banker
 ./gradlew clean build
 ```
-The compiled jar will be in `build/libs/`. You can build it yourself and compare it with the release jar to check that the download matches this code.
+
+The compiled jar will be in `build/libs/`.
+
+Building is allowed **for checking only**. Under the license below, you may not share, upload, sell, or publish a jar you built yourself, and you may not copy or modify the code without written permission.
 
 ---
 
