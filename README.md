@@ -169,4 +169,4 @@ This source code is public for viewing and security checking only. You may not c
 
 ## 🙋 Support
 
-Found a bug or have a suggestion? Join my Discord server: **[your Discord invite link here]**, or open an [issue](../../issues). Feedback is always welcome.
+Found a bug or have a suggestion? Join my Discord server: **[https://discord.gg/hGZvUmHs2t]**, or open an [issue](../../issues). Feedback is always welcome.
