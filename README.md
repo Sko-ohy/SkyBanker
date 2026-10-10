@@ -149,7 +149,7 @@ Building is allowed **for checking only**. Under the license below, you may not 
 - [SQLite JDBC](https://github.com/xerial/sqlite-jdbc) — data storage
 - [PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI) — optional placeholder support
 
-Older versions of Sky Banker used [SignGUI](https://github.com/Rapha149/SignGUI) by Rapha149 for the sign input. Version 1.2.0 no longer uses it.
+Older versions of Sky Banker used [SignGUI](https://github.com/Rapha149/SignGUI) by Rapha149 for the sign input. Version 1.2. no longer uses it.
 
 ---
 
