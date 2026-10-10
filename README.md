@@ -131,8 +131,8 @@ Reload either file in-game without restarting:
 The source code is public so you can see that the plugin is safe. You are welcome to read it and to build it on your own computer to check that the release jar matches the code:
 
 ```bash
-git clone https://github.com/yourusername/Sky-Banker.git
-cd Sky-Banker
+git clone https://github.com/sko-ohy/SkyBanker.git
+cd SkyBanker
 ./gradlew clean build
 ```
 
