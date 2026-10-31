@@ -39,6 +39,12 @@ public final class SkyBanker extends JavaPlugin implements CommandExecutor {
         }
 
         getServer().getPluginManager().registerEvents(new BankMenu(), this);
+        getServer().getPluginManager().registerEvents(new PlayerSettings(), this);
+        PlayerSettings.loadOnlinePlayers();
+        getServer().getPluginManager().registerEvents(new BankVault(), this);
+
+        // Checks Modrinth for a newer plugin version (async, see config.yml -> update-checker)
+        new UpdateChecker(this).start();
 
         // /bank - opens the bank menu only, unchanged
         if (getCommand("bank") != null) {
@@ -76,6 +82,7 @@ public final class SkyBanker extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onDisable() {
+        BankVault.shutdown(); // saves open vaults, must run before the database closes
         SkyBankerDatabase.closeConnection();
         getLogger().info("SkyBanker has been disabled.");
     }
