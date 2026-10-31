@@ -52,7 +52,7 @@ public class SkyInterest {
                             player.sendMessage(formattedMsg);
                             player.sendMessage("");
 
-                            BankerSound.playUpgrade(player);
+                            BankerSound.playInterest(player);
                         }
                     });
                 }
