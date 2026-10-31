@@ -79,6 +79,23 @@ public class SkyBankerDatabase {
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON transactions(timestamp)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_uuid_timestamp ON transactions(uuid, timestamp)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_balance ON bank_accounts(balance)");
+
+            // Per-player settings. sound_off = bitmask of muted sounds (0 = everything on).
+            stmt.execute("CREATE TABLE IF NOT EXISTS player_settings (" +
+                    "uuid TEXT PRIMARY KEY," +
+                    "sound_off INTEGER NOT NULL DEFAULT 0" +
+                    ")");
+
+            // Old versions had a balance graph - its table is no longer needed.
+            stmt.execute("DROP TABLE IF EXISTS balance_history");
+
+            // Personal Vault: owned flag + the saved items (own binary format).
+            stmt.execute("CREATE TABLE IF NOT EXISTS bank_vault (" +
+                    "uuid TEXT PRIMARY KEY," +
+                    "owned INTEGER NOT NULL DEFAULT 0," +
+                    "contents BLOB," +
+                    "updated_at LONG NOT NULL DEFAULT 0" +
+                    ")");
         }
     }
 
@@ -403,6 +420,103 @@ public class SkyBankerDatabase {
                 e.printStackTrace();
             }
             return 0;
+        }
+    }
+
+    // =====================================================================
+    // Player settings (sounds)
+    // =====================================================================
+
+    /** Bitmask of MUTED sounds. 0 = everything on (also returned if the player has no row). */
+    public static int getSoundOffMask(UUID uuid) {
+        synchronized (LOCK) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT sound_off FROM player_settings WHERE uuid = ?")) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return rs.getInt(1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+    }
+
+    public static void setSoundOffMask(UUID uuid, int mask) {
+        synchronized (LOCK) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO player_settings (uuid, sound_off) VALUES (?, ?) " +
+                            "ON CONFLICT(uuid) DO UPDATE SET sound_off = excluded.sound_off")) {
+                ps.setString(1, uuid.toString());
+                ps.setInt(2, mask);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // =====================================================================
+    // Personal Vault
+    // =====================================================================
+
+    public static boolean hasVault(UUID uuid) {
+        synchronized (LOCK) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT owned FROM bank_vault WHERE uuid = ?")) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return rs.getInt(1) == 1;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    }
+
+    public static void setVaultOwned(UUID uuid) {
+        synchronized (LOCK) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO bank_vault (uuid, owned, updated_at) VALUES (?, 1, ?) " +
+                            "ON CONFLICT(uuid) DO UPDATE SET owned = 1")) {
+                ps.setString(1, uuid.toString());
+                ps.setLong(2, System.currentTimeMillis());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /** Saved vault bytes, or null if nothing was saved yet. */
+    public static byte[] getVaultContents(UUID uuid) {
+        synchronized (LOCK) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT contents FROM bank_vault WHERE uuid = ?")) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return rs.getBytes(1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public static void setVaultContents(UUID uuid, byte[] contents) {
+        synchronized (LOCK) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE bank_vault SET contents = ?, updated_at = ? WHERE uuid = ?")) {
+                ps.setBytes(1, contents);
+                ps.setLong(2, System.currentTimeMillis());
+                ps.setString(3, uuid.toString());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
