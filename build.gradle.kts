@@ -26,7 +26,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.12.3")
 
     // SQLite JDBC (shaded into the final jar)
-    implementation("org.xerial:sqlite-jdbc:3.44.0.0")
+    implementation("org.xerial:sqlite-jdbc:3.54.1.0")
 }
 
 java {
