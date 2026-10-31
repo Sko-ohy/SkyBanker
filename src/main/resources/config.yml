@@ -18,9 +18,26 @@ settings:
   debug-mode: false
   interest-interval-hours: 31
   max-stored-transactions: 20
-  base-interest-rate: 0.02
-  base-interest-cap-coins: 10000000.0
   withdraw-percent-option: 0.2
+
+# =====================================================================
+# Update checker
+# Checks for a newer version of SkyBanker every time the server starts
+# (and once every 24 hours after that). Runs in the background and never
+# lags the server. If there is no internet, the check is simply skipped.
+# =====================================================================
+update-checker:
+  enabled: true
+  notify-admins: true    # tell admins (skybanker.admin) in chat when they join
+
+# =====================================================================
+# Personal Vault - a private item storage players buy once.
+# The button is in the Settings menu (right of the profile head).
+# =====================================================================
+vault:
+  enabled: true
+  price: 5000000.0       # coins a player pays ONCE to unlock the vault (from their purse)
+  rows: 3                # storage size: 1 - 6 rows (3 rows = 27 slots)
 
 gui:
   main-menu:
@@ -105,8 +122,9 @@ gui:
         material: COMPARATOR
         name: "&aSettings"
         lore:
-          - "&7View your bank profile, account"
-          - "&7stats and settings will be added soon."
+          - "&7View your bank profile, manage"
+          - "&7your sound settings and open"
+          - "&7your Personal Vault."
           - ""
           - "&eClick to open settings!"
 
@@ -221,8 +239,8 @@ gui:
   # disappears from the main menu and the menu can't be opened.
   # Extra placeholders: %player% %status% %created% %created_ago% %purse%
   #   %rank% %total_accounts% %progress% %progress_bar% %space_left%
-  #   %total_deposited% %total_withdrawn% (plus the usual balance/limit/
-  #   account/interest ones). The profile item is always the player's head.
+  #   (plus the usual balance/limit/account/interest ones).
+  #   The profile item is always the player's head.
   # =====================================================================
   settings-menu:
     enabled: true
@@ -253,12 +271,206 @@ gui:
           - ""
           - "&7Purse: &6$%purse%"
           - "&7Bank limit: &6$%limit%"
+      sounds:
+        # Left of the profile head. Click = open the sound menu.
+        enabled: true
+        slot: 11
+        material: NOTE_BLOCK
+        name: "&aSound Settings"
+        lore:
+          - "&7Choose which bank sounds you"
+          - "&7want to hear."
+          - ""
+          - "&7All sounds: %status%"
+          - ""
+          - "&eClick to customize!"
+      vault:
+        # Right of the profile head. Price / size: see the "vault:" section at the top.
+        # %price% = vault.price, %slots% = vault size
+        slot: 15
+        material: ENDER_CHEST
+        name: "&5Personal Vault"
+        # shown while the player has NOT bought the vault yet
+        lore-locked:
+          - "&7Store your items safely in your"
+          - "&7own private vault."
+          - ""
+          - "&7Price: &6$%price% coins"
+          - "&7Status: &cLocked"
+          - ""
+          - "&eClick to buy!"
+        # shown after the player bought it
+        lore-unlocked:
+          - "&7Keep your valuable items safe"
+          - "&7in your own private vault."
+          - ""
+          - "&eClick to open!"
       go-back:
         slot: 31
         material: ARROW
         name: "&aGo Back"
         lore:
           - "&7To Personal Bank Account"
+
+  # =====================================================================
+  # Sound menu (right-click the Sounds button in the Settings menu)
+  # Left-click a button = turn that sound on/off.
+  # Right-click a button = preview that sound.
+  # %status% is replaced by status-on / status-off below.
+  # "label" is the short name shown in the action bar when toggled.
+  # =====================================================================
+  sound-menu:
+    title: "Sound Settings"
+    size: 36
+    filler-material: GRAY_STAINED_GLASS_PANE
+    status-on: "&aON"
+    status-off: "&cOFF"
+    items:
+      master:
+        slot: 4
+        material: NOTE_BLOCK
+        label: "&6All Sounds"
+        name: "&6All Sounds"
+        lore:
+          - "&7Master switch for every sound"
+          - "&7the banker plays for you."
+          - ""
+          - "&7Status: %status%"
+          - ""
+          - "&eLeft-click to toggle!"
+          - "&eRight-click to preview!"
+      interest:
+        slot: 10
+        material: EXPERIENCE_BOTTLE
+        label: "&bInterest"
+        name: "&bInterest Sound"
+        lore:
+          - "&7Played when you receive your"
+          - "&7bank interest."
+          - ""
+          - "&7Status: %status%"
+          - ""
+          - "&eLeft-click to toggle!"
+          - "&eRight-click to preview!"
+      deposit:
+        slot: 12
+        material: CHEST
+        label: "&aDeposit"
+        name: "&aDeposit Sound"
+        lore:
+          - "&7Played when you deposit coins."
+          - ""
+          - "&7Status: %status%"
+          - ""
+          - "&eLeft-click to toggle!"
+          - "&eRight-click to preview!"
+      withdraw:
+        slot: 14
+        material: DROPPER
+        label: "&cWithdraw"
+        name: "&cWithdraw Sound"
+        lore:
+          - "&7Played when you withdraw coins."
+          - ""
+          - "&7Status: %status%"
+          - ""
+          - "&eLeft-click to toggle!"
+          - "&eRight-click to preview!"
+      upgrade:
+        slot: 16
+        material: GOLD_BLOCK
+        label: "&6Upgrade"
+        name: "&6Upgrade Sound"
+        lore:
+          - "&7Played when you buy a bank"
+          - "&7account upgrade."
+          - ""
+          - "&7Status: %status%"
+          - ""
+          - "&eLeft-click to toggle!"
+          - "&eRight-click to preview!"
+      error:
+        slot: 21
+        material: BARRIER
+        label: "&4Error"
+        name: "&4Error Sound"
+        lore:
+          - "&7Played when something goes wrong,"
+          - "&7like a full bank or not enough coins."
+          - ""
+          - "&7Status: %status%"
+          - ""
+          - "&eLeft-click to toggle!"
+          - "&eRight-click to preview!"
+      click:
+        slot: 23
+        material: STONE_BUTTON
+        label: "&7Menu Click"
+        name: "&7Menu Click Sound"
+        lore:
+          - "&7Played when you click buttons"
+          - "&7inside the bank menus."
+          - ""
+          - "&7Status: %status%"
+          - ""
+          - "&eLeft-click to toggle!"
+          - "&eRight-click to preview!"
+      go-back:
+        slot: 31
+        material: ARROW
+        name: "&aGo Back"
+        lore:
+          - "&7To Bank Settings"
+
+  # =====================================================================
+  # Personal Vault inventory (title + optional Close button row)
+  # =====================================================================
+  vault-menu:
+    title: "Personal Vault"
+    # Optional Close button. false = plain chest (default). true = one extra
+    # bottom row with a Close button is added (then max rows becomes 5).
+    close-button: false
+    filler-material: GRAY_STAINED_GLASS_PANE   # the extra bottom row (only if close-button: true)
+    close-position: 5        # where the Close button sits in that row (1 - 9)
+    items:
+      close:
+        material: BARRIER
+        name: "&cClose"
+
+  # =====================================================================
+  # "Are you sure?" menu shown before buying the vault
+  # %price% = vault.price, %slots% = vault size, %purse% = player's purse
+  # =====================================================================
+  vault-confirm-menu:
+    title: "Buy Personal Vault"
+    size: 27
+    filler-material: GRAY_STAINED_GLASS_PANE
+    items:
+      confirm:
+        slot: 11
+        material: LIME_STAINED_GLASS_PANE
+        name: "&aConfirm Purchase"
+        lore:
+          - "&7Pay &6$%price% coins &7to unlock"
+          - "&7your Personal Vault."
+          - ""
+          - "&eClick to confirm!"
+      info:
+        slot: 13
+        material: ENDER_CHEST
+        name: "&5Personal Vault"
+        lore:
+          - "&7A private storage with"
+          - "&e%slots% slots &7for your items."
+          - ""
+          - "&7Price: &6$%price% coins"
+          - "&7Your purse: &6$%purse% coins"
+      cancel:
+        slot: 15
+        material: RED_STAINED_GLASS_PANE
+        name: "&cCancel"
+        lore:
+          - "&7Go back to the bank."
 
   sign-input:
     deposit:
