@@ -77,3 +77,41 @@ upgrade-success: "&6&m                                        &r\n&a&lBANK UPGRA
 # Sent automatically to a player when their scheduled bank interest
 # is paid out. %amount% = interest earned, %balance% = new bank total.
 interest-received: "&6[Bank] &aYou received &e$%amount% &ainterest! New balance: &6$%balance%"
+
+# =====================================================================
+# Sound settings
+# =====================================================================
+
+# Small action-bar notice shown when a player turns a bank sound on/off
+# in the sound menu.
+# %sound% = the sound's label (set in config.yml under gui.sound-menu),
+# %status% = ON / OFF text (also set in config.yml).
+sound-toggled: "&7%sound%&7: %status%"
+
+# =====================================================================
+# Update checker
+# =====================================================================
+
+# Shown to admins (skybanker.admin) when a newer version is available.
+# Multi-line: use \n. %current% = installed version, %latest% = new version.
+update-available: "&6&m                                        &r\n&6&lSkyBanker &8» &eA new update is available!\n&7Your version: &c%current% &8→ &7New version: &a%latest%"
+
+# The clickable download line, its hover text (%url% = download link)
+# and the closing line under it.
+update-click: "&a&l[Click here to download]"
+update-hover: "&7Open &e%url%"
+update-footer: "&6&m                                        &r"
+
+# =====================================================================
+# Personal Vault
+# =====================================================================
+
+# Shown after a player buys the vault. %price% = what they paid.
+vault-purchased: "&aYou unlocked your &5Personal Vault &afor &6$%price%&a!"
+
+# Shown when the player's purse is too low. %price% = vault price,
+# %amount% = what they actually have.
+vault-not-enough: "&cYou need &6$%price% &cto unlock the vault! You only have &6$%amount%&c."
+
+# Shown when a player tries to buy a vault they already own.
+vault-already-owned: "&cYou already own the vault!"
