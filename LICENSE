@@ -1,4 +1,20 @@
 Copyright (c) 2026 Skoohy. All rights reserved.
 
-This source code is shared for viewing and security checking only.
-You may not copy, modify, redistribute, or sell it without written permission.
+SkyBanker is source-available, not open source.
+
+You MAY:
+- View and read this source code, for example to check that it is safe.
+- Download the official release jar and use it on your own Minecraft servers,
+  including servers that are public or have a store.
+- Build the code yourself only to verify that it matches the official release.
+
+You MAY NOT, without written permission from the author:
+- Copy, modify, or redistribute this source code or the jar.
+- Sell the plugin or any part of it, or include it in a paid bundle.
+- Re-upload it to any other website, or claim it as your own work.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. THE AUTHOR IS
+NOT LIABLE FOR ANY DAMAGE OR DATA LOSS CAUSED BY USING IT. Back up your server
+before installing.
+
+Contact for permission requests: (your Discord or email here)
