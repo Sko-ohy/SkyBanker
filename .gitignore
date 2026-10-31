@@ -1,7 +1,33 @@
+# Gradle / build output
 build/
 .gradle/
+.kotlin/
+out/
+bin/
+
+# IDE files
 .idea/
+*.iml
+.vscode/
+
+# Test server created by runServer
 run/
+
+# Databases (SQLite also makes -wal and -shm files in WAL mode)
 *.db
+*.db-wal
+*.db-shm
+
+# Jars (keep the Gradle wrapper so people can build the project)
 *.jar
 !gradle/wrapper/gradle-wrapper.jar
+
+# Logs and OS junk
+*.log
+logs/
+.DS_Store
+Thumbs.db
+
+# Secrets and personal settings - never commit these
+.env
+local.properties
