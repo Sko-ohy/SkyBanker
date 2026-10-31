@@ -408,7 +408,9 @@ public class BankMenu implements Listener {
             case DEPOSIT -> handleDepositMenuClick(player, slot);
             case WITHDRAW -> handleWithdrawMenuClick(player, slot);
             case UPGRADES -> handleUpgradesMenuClick(player, slot);
-            case SETTINGS -> BankSettingsMenu.handleClick(player, slot);
+            case SETTINGS -> BankSettingsMenu.handleClick(player, slot, event.getClick());
+            case SOUNDS -> BankSoundMenu.handleClick(player, slot, event.getClick());
+            case VAULT_BUY -> BankVault.handleConfirmClick(player, slot);
         }
     }
 
