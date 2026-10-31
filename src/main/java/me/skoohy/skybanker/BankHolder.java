@@ -40,6 +40,6 @@ public class BankHolder implements InventoryHolder {
     }
 
     public enum MenuType {
-        MAIN, DEPOSIT, WITHDRAW, UPGRADES, SETTINGS
+        MAIN, DEPOSIT, WITHDRAW, UPGRADES, SETTINGS, SOUNDS, VAULT_BUY
     }
 }
