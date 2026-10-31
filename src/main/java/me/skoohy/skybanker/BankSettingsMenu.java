@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,11 +22,14 @@ import java.util.Map;
  * bank menu). Kept in its own class so BankMenu stays small.
  *
  * Layout (36 slots by default, all slots are configurable):
+ *   left   (11) - Sounds        (click = open the sound menu)
  *   center (13) - Player head   (username, status, created date, balance...)
+ *   right  (15) - Personal Vault (buy once, then private item storage)
  *   bottom (31) - Go Back
  *
  * Admins can turn the whole feature off with
- * gui.settings-menu.enabled: false in config.yml.
+ * gui.settings-menu.enabled: false in config.yml, or hide the sound button with
+ * gui.settings-menu.items.sounds.enabled: false.
  *
  * Click events are routed here from BankMenu (MenuType.SETTINGS).
  */
@@ -43,6 +47,10 @@ public class BankSettingsMenu {
     /** True unless the admin set gui.settings-menu.enabled to false. */
     public static boolean isEnabled() {
         return cfg().getBoolean(PATH + ".enabled", true);
+    }
+
+    private static boolean itemEnabled(String item) {
+        return cfg().getBoolean(PATH + ".items." + item + ".enabled", true);
     }
 
     // =====================================================================
@@ -124,6 +132,14 @@ public class BankSettingsMenu {
         // center: the player's own head with all the account info
         setItem(gui, slot("profile", 13), buildProfileItem(player, ph));
 
+        // left of center: sound settings
+        if (itemEnabled("sounds")) {
+            setItem(gui, slot("sounds", 11), buildSoundItem(player));
+        }
+
+        // right of center: Personal Vault (hidden if vault.enabled is false)
+        BankVault.setButton(gui, player);
+
         // bottom: go back
         setItem(gui, slot("go-back", 31), buildItem(PATH + ".items.go-back", Material.ARROW, ph));
 
@@ -134,10 +150,20 @@ public class BankSettingsMenu {
     // Clicks (called from BankMenu for MenuType.SETTINGS)
     // =====================================================================
 
-    public static void handleClick(Player player, int slot) {
+    public static void handleClick(Player player, int slot, ClickType click) {
         if (slot == slot("go-back", 31)) {
             BankerSound.playClick(player);
             BankMenu.openMainBank(player);
+            return;
+        }
+
+        if (itemEnabled("sounds") && slot == slot("sounds", 11)) {
+            // Click = open the sound menu (everything is customized inside it)
+            BankerSound.playClick(player);
+            BankSoundMenu.open(player);
+        } else if (BankVault.isEnabled() && slot == BankVault.buttonSlot()) {
+            BankerSound.playClick(player);
+            BankVault.onButtonClick(player);
         }
         // The other items are information only, so clicking them does nothing.
     }
@@ -202,6 +228,27 @@ public class BankSettingsMenu {
             head.setItemMeta(skullMeta);
         }
         return head;
+    }
+
+    /** The Sounds button: glows when sounds are ON, shows ON/OFF in the lore. */
+    private static ItemStack buildSoundItem(Player player) {
+        String itemPath = PATH + ".items.sounds";
+        boolean on = PlayerSettings.isSoundOn(player.getUniqueId(), PlayerSettings.SoundType.MASTER);
+
+        Map<String, String> ph = new HashMap<>();
+        ph.put("%status%", BankSoundMenu.status(on));
+
+        Material mat = BankManager.getMaterial(itemPath + ".material", Material.NOTE_BLOCK);
+        ItemStack item = new ItemStack(mat);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            decorate(meta, itemPath, ph);
+            if (on) {
+                meta.setEnchantmentGlintOverride(true);
+            }
+            item.setItemMeta(meta);
+        }
+        return item;
     }
 
     private static String progressBar(double percent) {
